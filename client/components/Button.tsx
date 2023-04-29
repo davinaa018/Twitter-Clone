@@ -19,6 +19,9 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
       className={`
         w-full
         flex

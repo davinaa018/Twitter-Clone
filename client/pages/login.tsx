@@ -4,7 +4,43 @@ import { FcGoogle } from "react-icons/fc";
 import { BsTwitter, BsApple } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
+import { useCallback, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleLogin = useCallback(async () => {
+    const res = await fetch("http://localhost:8080/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+    console.log(data);
+    if (data.error)
+      return toast.error(data.error, {
+        duration: 2000,
+        style: {
+          background: "red",
+          color: "#fff",
+        },
+      });
+    toast.success("Logged in successfully", {
+      style: {
+        background: "green",
+        color: "#fff",
+      },
+    });
+    localStorage.setItem("token", data.token);
+    router.push("/");
+  }, [email, password, router, toast]);
+
   return (
     <div className="bg-twitterBlueGrayish h-screen flex items-center justify-center">
       <div
@@ -41,18 +77,29 @@ const Login = () => {
             <p className="mx-4">or</p>
             <div className="border-b border-zinc-600 w-2/3"></div>
           </div>
-          <form>
-            <div className="mb-4">
-              <Input
-                id="email"
-                label="Phone, email, or username"
-                type="email"
-                value=""
-              />
-            </div>
-            <Button label="Next" outlined />
-            <Button label="Forgot password?" />
-          </form>
+
+          <div className="mb-4">
+            <Input
+              id="email"
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
+          </div>
+          <Button label="Next" outlined onClick={handleLogin} type="submit" />
+          <Button label="Forgot password?" />
 
           <div className=" mt-12">
             <p className="text-sm text-zinc-400 mb-10">

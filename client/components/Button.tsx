@@ -7,6 +7,8 @@ interface ButtonProps {
   Icon?: IconType;
   disabled?: boolean;
   outlined?: boolean;
+  isColor?: boolean;
+  small?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -16,6 +18,8 @@ const Button: React.FC<ButtonProps> = ({
   Icon,
   disabled,
   outlined,
+  isColor,
+  small,
 }) => {
   return (
     <button
@@ -28,8 +32,6 @@ const Button: React.FC<ButtonProps> = ({
         items-center
         justify-center
         rounded-full
-        py-3
-        px-4
         text-sm md:text-base
         transition
         duration-200
@@ -37,12 +39,17 @@ const Button: React.FC<ButtonProps> = ({
         focus:outline-none
         disabled:opacity-50
         disabled:cursor-not-allowed
-        my-4
+        ${
+          small
+            ? "w-20 py-2 px-3 text-xs mt-1"
+            : "w-full py-3 px-4 text-sm md:text-base my-4"
+        }
        ${
          outlined
            ? "bg-white text-black hover:bg-zinc-200"
            : "border border-zinc-600 bg-black text-white hover:bg-zinc-800/60"
        }
+       ${isColor ? "bg-twitterBlue text-white hover:bg-twitterBlue/80" : ""}
     `}
     >
       {Icon && <Icon className="w-5 h-5 mr-2" />}

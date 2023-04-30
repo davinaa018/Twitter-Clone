@@ -5,6 +5,7 @@ import TweetArea from "@/components/TweetArea";
 import { useEffect } from "react";
 import { BsStars } from "react-icons/bs";
 import { AiOutlineSetting } from "react-icons/ai";
+import TweetCard from "@/components/TweetCard";
 
 export default function Home() {
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function Home() {
             <TweetArea />
           </div>
           <hr className="w-full border border-white/20" />
+          <TweetCard />
         </div>
       </div>
 

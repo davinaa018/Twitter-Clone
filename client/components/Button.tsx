@@ -27,7 +27,6 @@ const Button: React.FC<ButtonProps> = ({
       type={type}
       disabled={disabled}
       className={`
-        w-full
         flex
         items-center
         justify-center
@@ -41,7 +40,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled:cursor-not-allowed
         ${
           small
-            ? "w-20 py-2 px-3 text-xs mt-1"
+            ? "py-2 px-3 text-xs mt-1"
             : "w-full py-3 px-4 text-sm md:text-base my-4"
         }
        ${

@@ -3,21 +3,55 @@ import { AiOutlineGift } from "react-icons/ai";
 import { TbCalendarTime } from "react-icons/tb";
 import { BsImage, BsEmojiSmile } from "react-icons/bs";
 import Button from "./Button";
+import { useCallback, useState } from "react";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 const TweetArea = () => {
+  const [description, setDescription] = useState("");
+  const router = useRouter();
+
+  const handleCreateTweet = useCallback(async () => {
+    const res = await fetch("http://localhost:8080/api/createTweet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        description,
+        authorizationToken: localStorage.getItem("token"),
+      }),
+    });
+    const data = await res.json();
+    if (data.error)
+      return toast.error(data.error, {
+        style: {
+          background: "red",
+          color: "#fff",
+        },
+      });
+    toast.success("Tweet created successfully", {
+      style: {
+        background: "green",
+        color: "#fff",
+      },
+    });
+    setDescription("");
+
+    router.push("/");
+  }, [description, router, toast]);
+
   return (
     <div className="flex w-full gap-2">
       <div className="ml-2">
-        <img
-          src="https://pbs.twimg.com/profile_images/1441164208953082881/6X0Z8Y5-_400x400.jpg"
-          alt="profile"
-          className="w-12 h-12 rounded-full border border-white"
-        />
+        <img src="user.png" alt="profile" className="w-11 h-10 rounded-full " />
       </div>
       {/* Textarea for tweets */}
       <div className="flex flex-col w-full ">
         <textarea
           name="tweet"
           id="tweet"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           cols={30}
           rows={10}
           placeholder="What's happening?"
@@ -44,7 +78,7 @@ const TweetArea = () => {
               className="text-twitterBlue cursor-pointer"
             />
           </div>
-          <Button label="Tweet" isColor small />
+          <Button label="Tweet" isColor small onClick={handleCreateTweet} />
         </div>
       </div>
     </div>

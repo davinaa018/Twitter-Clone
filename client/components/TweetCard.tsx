@@ -2,11 +2,22 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { FiMessageCircle, FiUpload } from "react-icons/fi";
 import { AiOutlineHeart, AiOutlineRetweet } from "react-icons/ai";
-
 import { BsThreeDots } from "react-icons/bs";
 
+interface Tweet {
+  id: number;
+  content: string;
+  user: {
+    id: number;
+    username: string;
+    name: string;
+    email: string;
+  };
+}
+
 const TweetCard = () => {
-  const [tweets, setTweets] = useState([]);
+  const [tweets, setTweets] = useState<Tweet[]>([]);
+
   const handleGetTweets = useCallback(async () => {
     const res = await fetch("http://localhost:8080/api/getTweets", {
       method: "GET",
@@ -20,11 +31,12 @@ const TweetCard = () => {
 
   useEffect(() => {
     handleGetTweets();
-  });
+  }, [handleGetTweets]);
+
   return (
     <div className="w-full">
       <div className="flex flex-col w-full text-white">
-        {tweets?.map((tweet: any, index: number) => (
+        {tweets?.map((tweet: any) => (
           <div key={tweet.id}>
             <div className="flex items-center gap-3 pb-2 pl-2">
               <Link href={`/${tweet?.user?.username}`}>

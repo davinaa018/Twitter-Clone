@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   BiHomeCircle,
   BiHash,
@@ -12,6 +12,7 @@ import { CiCircleMore } from "react-icons/ci";
 import { IconType } from "react-icons";
 import { BsTwitter } from "react-icons/bs";
 import Link from "next/link";
+import { getCurrentUser } from "@/hooks/useGetCurrentUser";
 
 interface Icon {
   icon: IconType;
@@ -23,6 +24,21 @@ interface Icon {
 
 const IconBar = () => {
   const [highlightedIndex, setHighlightedIndex] = useState(1);
+  const [username, setUsername] = useState("");
+
+  const getData = useCallback(async () => {
+    const user = await getCurrentUser();
+    setUsername(user.username);
+  }, [setUsername]);
+
+  useEffect(() => {
+    getData();
+    const path = window.location.pathname;
+    const profileIndex = icons.findIndex((icon) => icon.to === `/${username}`);
+    if (path === `/${username}` && profileIndex >= 0) {
+      setHighlightedIndex(profileIndex);
+    }
+  }, [username, getData]);
 
   const icons: Icon[] = [
     {
@@ -70,7 +86,7 @@ const IconBar = () => {
       icon: BiUser,
       label: "Profile",
       onClick: () => {},
-      to: "/profile",
+      to: `/${username}`,
     },
     {
       icon: CiCircleMore,

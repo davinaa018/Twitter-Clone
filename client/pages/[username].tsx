@@ -1,9 +1,15 @@
 import Button from "@/components/Button";
 import IconBar from "@/components/IconBar";
-import TrendingCard from "@/components/TrendingCard";
 import { useCallback, useEffect, useState } from "react";
 import { BsArrowLeft, BsStars } from "react-icons/bs";
-import { AiOutlineSetting } from "react-icons/ai";
+import {
+  HiOutlineLocationMarker,
+  HiLink,
+  HiOutlineDotsHorizontal,
+} from "react-icons/hi";
+import { GiFeather } from "react-icons/gi";
+import { MdOutlineCalendarMonth } from "react-icons/md";
+import { useRouter } from "next/router";
 import { getCurrentUser } from "@/hooks/useGetCurrentUser";
 
 interface User {
@@ -15,6 +21,7 @@ interface User {
 
 export default function Profile() {
   const [user, setUser] = useState<User>();
+  const router = useRouter();
 
   const getData = useCallback(async () => {
     const user = await getCurrentUser();
@@ -22,7 +29,6 @@ export default function Profile() {
   }, [setUser]);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) window.location.href = "/login";
     getData();
   }, [getData]);
   return (
@@ -34,6 +40,10 @@ export default function Profile() {
           <div className="w-full px-10 hidden xl:block">
             <Button label="Tweet" isColor />
           </div>
+          <div className="flex items-center justify-center relative xl:hidden rounded-full p-3 bg-twitterBlue hover:bg-twitterBlue/80">
+            <span className="absolute left-2 top-1">+</span>
+            <GiFeather size={25} />
+          </div>
         </div>
       </div>
 
@@ -43,7 +53,10 @@ export default function Profile() {
         <div className="w-full flex flex-col ">
           <div className="flex items-center justify-between">
             <div className="flex items-center px-2 p-2">
-              <div className="hover:bg-zinc-800 rounded-full cursor-pointer px-2 py-2">
+              <div
+                className="hover:bg-zinc-800 rounded-full cursor-pointer px-2 py-2"
+                onClick={() => router.push("/")}
+              >
                 <BsArrowLeft size={30} />
               </div>
               <h1 className="text-white text-xl pl-4">{user?.username}</h1>
@@ -51,12 +64,84 @@ export default function Profile() {
             <BsStars size={30} className="text-twitterBlue cursor-pointer" />
           </div>
           <hr className="w-full border border-white/20" />
+
+          <div className="flex flex-col relative">
+            <div className="h-40 w-full bg-zinc-600" />
+            <hr className="w-full border border-white/20" />
+            <div className="flex flex-col gap-y-4 sm:gap-y-8 px-4">
+              <div className="flex justify-end ">
+                <img
+                  src="user.png"
+                  alt="avatar"
+                  className="w-32 h-32 md:w-36 md:h-36 border-4 border-zinc-800 rounded-full absolute left-5 sm:left-10 top-[20%] sm:top-[20%]"
+                />
+                <Button label="Edit Profile" isColor small />
+              </div>
+              <div className="flex flex-col justify-center">
+                <h1 className="font-bold md:text-xl">{user?.name}</h1>
+                <h1 className="text-gray-500">@{user?.username}</h1>
+                <p className="text-gray-500 text-sm">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Voluptatibus, quibusdam.
+                </p>
+
+                <div className="flex flex-col md:flex-row gap-x-4 mt-3">
+                  <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
+                    <HiOutlineLocationMarker size={20} className="text-white" />
+                    Your location
+                  </h1>
+                  <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
+                    <HiLink size={20} className="text-white" />
+                    <a href="#">Your Website</a>
+                  </h1>
+                  <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
+                    <MdOutlineCalendarMonth size={20} className="text-white" />
+                    When you joined
+                  </h1>
+                </div>
+
+                <div className="flex gap-x-4 mt-3">
+                  <h1 className="text-gray-500 flex items-center justify-center gap-x-1">
+                    <span className="font-bold text-white">0</span> Following
+                  </h1>
+                  <h1 className="text-gray-500 flex items-center justify-center gap-x-1">
+                    <span className="font-bold text-white">0</span> Followers
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div
+              className="
+              flex
+              justify-between
+              items-center
+              px-4
+              border-b
+              border-white/20
+              py-2
+              sm:py-4
+            "
+            >
+              <a href="#" className="font-semibold">
+                Tweets
+              </a>
+              <a href="#" className="font-semibold">
+                Tweets & replies
+              </a>
+              <a href="#" className="font-semibold">
+                Media
+              </a>
+              <a href="#" className="font-semibold">
+                Likes
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
       <hr className="border border-white/20 h-screen" />
       {/* Right Side */}
-      <div className="hidden md:flex justify-center md:flex-[.13] lg:flex-[.5] xl:flex-[.8] mt-2">
+      <div className="hidden lg:flex justify-center md:flex-[.13] lg:flex-[.5] xl:flex-[.8] mt-2">
         <div className="w-10/12 hidden lg:flex flex-col">
           <input
             type="search"
@@ -85,16 +170,28 @@ export default function Profile() {
               py-2
             "
               >
-                <h1 className="text-white text-xl font-bold ">
-                  Trends for you
-                </h1>
-                <AiOutlineSetting
-                  size={23}
-                  className="text-twitterBlue cursor-pointer"
-                />
+                <h1 className="font-semibold">Who to follow</h1>
+                <HiOutlineDotsHorizontal size={20} className="text-white" />
               </div>
               <hr className="w-full border border-zinc-500/30" />
-              <TrendingCard />
+              <div className="flex flex-col justify-between">
+                <div className="flex items-center justify-between px-4">
+                  <div className="flex items-center justify-center gap-3">
+                    <img src="user.png" alt="avatar" className="w-10 h-10" />
+                    <div className="flex flex-col">
+                      <h1 className="font-semibold">User</h1>
+                      <h1 className="text-gray-500">@user</h1>
+                    </div>
+                  </div>
+                  <div className="w-4/12">
+                    <Button label="Follow" outlined />
+                  </div>
+                  <HiOutlineDotsHorizontal
+                    size={20}
+                    className="text-white cursor-pointer"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

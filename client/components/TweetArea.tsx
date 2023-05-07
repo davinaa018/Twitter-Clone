@@ -11,10 +11,13 @@ const TweetArea = () => {
   const router = useRouter();
 
   const handleCreateTweet = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
     const res = await fetch("http://localhost:8080/api/createTweet", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         description,

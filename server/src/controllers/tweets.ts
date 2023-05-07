@@ -1,21 +1,20 @@
 import { Request, Response } from "express";
 import prisma from "../lib/prismaClient";
-import { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-export const createTweet = async (
-  req: Request,
-  res: Response,
-  context: any
-) => {
+export const createTweet = async (req: Request, res: Response) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
   try {
-    const { authorizationToken } = req.body;
-    const decodedToken = decode(authorizationToken);
-    const username =
-      typeof decodedToken === "object" ? decodedToken?.username : undefined;
-
+    const authorizationToken = req.headers.authorization?.split(" ")[1];
+    if (!authorizationToken) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    const { username }: any = jwt.verify(
+      authorizationToken,
+      process.env.JWT_SECRET!
+    );
     if (!username) return res.status(401).json({ error: "Not authenticated" });
 
     const user = await prisma.user.findUnique({

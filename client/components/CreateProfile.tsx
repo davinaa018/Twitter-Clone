@@ -41,6 +41,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ user, onClick }) => {
         },
       });
     }
+    window.location.reload();
   }, [bio, location, website, toast]);
   return (
     <div className="flex flex-col items-center bg-black md:rounded-2xl w-full h-screen md:h-auto md:w-8/12 lg:w-6/12 xl:w-5/12 pb-20">
@@ -63,7 +64,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ user, onClick }) => {
         <Input id="username" value={user?.username} label="Username" />
         <Input
           id="bio"
-          value={bio}
+          value={user?.Profile?.bio}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setBio(e.target.value)
           }
@@ -71,7 +72,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ user, onClick }) => {
         />
         <Input
           id="location"
-          value={location}
+          value={user?.Profile?.location}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setLocation(e.target.value)
           }
@@ -79,7 +80,7 @@ const CreateProfile: React.FC<CreateProfileProps> = ({ user, onClick }) => {
         />
         <Input
           id="website"
-          value={website}
+          value={user?.Profile?.website}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setWebsite(e.target.value)
           }

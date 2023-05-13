@@ -40,7 +40,7 @@ const TweetArea = () => {
     });
     setDescription("");
 
-    router.push("/");
+    window.location.reload();
   }, [description, router, toast]);
 
   return (

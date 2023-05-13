@@ -88,6 +88,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { username },
+      include: { Profile: true },
     });
 
     if (!user) return res.status(404).json({ error: "User not found" });

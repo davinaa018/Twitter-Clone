@@ -40,8 +40,8 @@ const Button: React.FC<ButtonProps> = ({
         disabled:cursor-not-allowed
         ${
           small
-            ? "py-2 px-3 text-xs mt-1"
-            : "w-full py-3 px-4 text-sm md:text-base my-4"
+            ? "w-3/12 py-2 px-3 text-sm mt-1"
+            : "w-full py-2 px-4 text-sm md:text-base my-4"
         }
        ${
          outlined

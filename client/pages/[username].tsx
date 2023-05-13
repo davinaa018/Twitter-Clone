@@ -11,16 +11,11 @@ import { GiFeather } from "react-icons/gi";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { useRouter } from "next/router";
 import { getCurrentUser } from "@/hooks/useGetCurrentUser";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  username: string;
-}
+import CreateProfile from "@/components/CreateProfile";
 
 export default function Profile() {
-  const [user, setUser] = useState<User>();
+  const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState<any>();
   const router = useRouter();
 
   const getData = useCallback(async () => {
@@ -31,9 +26,15 @@ export default function Profile() {
   useEffect(() => {
     getData();
   }, [getData]);
+
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen z-0">
       {/* Left Side */}
+      {showModal && (
+        <div className="absolute top-0 left-0 w-full h-screen bg-white/20 z-[1] flex justify-center items-center">
+          <CreateProfile user={user} onClick={() => setShowModal(false)} />
+        </div>
+      )}
       <div className="hidden sm:block  sm:flex-[.2] lg:flex-[.1] xl:flex-[.6]">
         <div className="flex flex-col items-center justify-center ">
           <IconBar />
@@ -75,28 +76,32 @@ export default function Profile() {
                   alt="avatar"
                   className="w-32 h-32 md:w-36 md:h-36 border-4 border-zinc-800 rounded-full absolute left-5 sm:left-10 top-[20%] sm:top-[20%]"
                 />
-                <Button label="Edit Profile" isColor small />
+                <Button
+                  label="Edit Profile"
+                  isColor
+                  small
+                  onClick={() => setShowModal(true)}
+                />
               </div>
               <div className="flex flex-col justify-center">
                 <h1 className="font-bold md:text-xl">{user?.name}</h1>
                 <h1 className="text-gray-500">@{user?.username}</h1>
                 <p className="text-gray-500 text-sm">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptatibus, quibusdam.
+                  {user?.Profile?.bio || "Add your bio"}
                 </p>
 
                 <div className="flex flex-col md:flex-row gap-x-4 mt-3">
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <HiOutlineLocationMarker size={20} className="text-white" />
-                    Your location
+                    {user?.Profile?.location || "Your location"}
                   </h1>
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <HiLink size={20} className="text-white" />
-                    <a href="#">Your Website</a>
+                    <a href="#">{user?.Profile?.website || "Your website"}</a>
                   </h1>
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <MdOutlineCalendarMonth size={20} className="text-white" />
-                    When you joined
+                    {user?.createdAt.split("T")[0]}
                   </h1>
                 </div>
 

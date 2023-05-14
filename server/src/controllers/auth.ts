@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import prisma from "../lib/prismaClient";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -68,32 +68,6 @@ export const loginUser = async (req: Request, res: Response) => {
     );
 
     return res.status(200).json({ user, token, message: "Login successfully" });
-  } catch (error: any) {
-    console.log(error);
-    return res.status(500).json({ error: error.message });
-  }
-};
-
-export const getCurrentUser = async (req: Request, res: Response) => {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) return res.status(401).json({ error: "Not authenticated" });
-
-    const { username }: any = jwt.verify(token, process.env.JWT_SECRET!);
-
-    if (!username) return res.status(401).json({ error: "Not authenticated" });
-
-    const user = await prisma.user.findUnique({
-      where: { username },
-      include: { Profile: true },
-    });
-
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    return res.status(200).json({ user });
   } catch (error: any) {
     console.log(error);
     return res.status(500).json({ error: error.message });

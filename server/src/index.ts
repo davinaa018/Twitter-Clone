@@ -1,9 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { getCurrentUser, loginUser, registerUser } from "./controllers/auth";
+import { loginUser, registerUser } from "./controllers/auth";
 import { createTweet, getTweets } from "./controllers/tweets";
 import { createProfile } from "./controllers/profile";
+import { getCurrentUser, getUserByUsername } from "./controllers/user";
 
 dotenv.config();
 
@@ -14,7 +15,10 @@ app.use(express.json());
 // Authorization
 app.post("/api/register", registerUser);
 app.post("/api/login", loginUser);
+
+// User
 app.get("/api/getCurrentUser", getCurrentUser);
+app.get("/api/getUserByUsername", getUserByUsername);
 
 // Tweets
 app.post("/api/createTweet", createTweet);

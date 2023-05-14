@@ -10,18 +10,24 @@ import {
 import { GiFeather } from "react-icons/gi";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { useRouter } from "next/router";
-import { getCurrentUser } from "@/hooks/useGetCurrentUser";
+
 import CreateProfile from "@/components/CreateProfile";
+import { getUserByUsername } from "@/hooks/useGetUserByUsername";
 
 export default function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<any>();
+  const [isCurrentUser, setIsCurrentUser] = useState();
   const router = useRouter();
 
   const getData = useCallback(async () => {
-    const user = await getCurrentUser();
+    const { user, isCurrentUser } = await getUserByUsername(
+      router.query.username as string
+    );
     setUser(user);
-  }, [setUser]);
+    setIsCurrentUser(isCurrentUser);
+    console.log(isCurrentUser);
+  }, [setUser, setIsCurrentUser, router.query.username]);
 
   useEffect(() => {
     getData();
@@ -76,12 +82,16 @@ export default function Profile() {
                   alt="avatar"
                   className="w-32 h-32 md:w-36 md:h-36 border-4 border-zinc-800 rounded-full absolute left-5 sm:left-10 top-[20%] sm:top-[20%]"
                 />
-                <Button
-                  label="Edit Profile"
-                  isColor
-                  small
-                  onClick={() => setShowModal(true)}
-                />
+                {isCurrentUser ? (
+                  <Button
+                    label="Edit Profile"
+                    isColor
+                    small
+                    onClick={() => setShowModal(true)}
+                  />
+                ) : (
+                  <Button label="Follow" outlined small />
+                )}
               </div>
               <div className="flex flex-col justify-center">
                 <h1 className="font-bold md:text-xl">{user?.name}</h1>
@@ -97,7 +107,9 @@ export default function Profile() {
                   </h1>
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <HiLink size={20} className="text-white" />
-                    <a href="#">{user?.Profile?.website || "Your website"}</a>
+                    <a href={user?.Profile?.website}>
+                      {user?.Profile?.website || "Your website"}
+                    </a>
                   </h1>
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <MdOutlineCalendarMonth size={20} className="text-white" />

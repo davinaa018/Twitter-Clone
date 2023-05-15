@@ -13,10 +13,12 @@ import { useRouter } from "next/router";
 
 import CreateProfile from "@/components/CreateProfile";
 import { getUserByUsername } from "@/hooks/useGetUserByUsername";
+import TweetCard from "@/components/TweetCard";
 
 export default function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<any>();
+  const [userTweets, setUserTweets] = useState<any[]>();
   const [isCurrentUser, setIsCurrentUser] = useState();
   const router = useRouter();
 
@@ -26,7 +28,6 @@ export default function Profile() {
     );
     setUser(user);
     setIsCurrentUser(isCurrentUser);
-    console.log(isCurrentUser);
   }, [setUser, setIsCurrentUser, router.query.username]);
 
   useEffect(() => {
@@ -75,12 +76,12 @@ export default function Profile() {
           <div className="flex flex-col relative">
             <div className="h-40 w-full bg-zinc-600" />
             <hr className="w-full border border-white/20" />
-            <div className="flex flex-col gap-y-4 sm:gap-y-8 px-4">
+            <div className="flex flex-col sm:gap-y-8 px-4">
               <div className="flex justify-end ">
                 <img
                   src="user.png"
                   alt="avatar"
-                  className="w-32 h-32 md:w-36 md:h-36 border-4 border-zinc-800 rounded-full absolute left-5 sm:left-10 top-[20%] sm:top-[20%]"
+                  className="w-32 h-32 md:w-36 md:h-36 border-4 border-zinc-800 rounded-full absolute left-5 sm:left-10 top-[15%] "
                 />
                 {isCurrentUser ? (
                   <Button
@@ -95,12 +96,12 @@ export default function Profile() {
               </div>
               <div className="flex flex-col justify-center">
                 <h1 className="font-bold md:text-xl">{user?.name}</h1>
-                <h1 className="text-gray-500">@{user?.username}</h1>
+                <h1 className="text-gray-500 text-sm">@{user?.username}</h1>
                 <p className="text-gray-500 text-sm">
                   {user?.Profile?.bio || "Add your bio"}
                 </p>
 
-                <div className="flex flex-col md:flex-row gap-x-4 mt-3">
+                <div className="flex flex-col md:flex-row gap-x-4 gap-y-2 md:gap-y-0 mt-3">
                   <h1 className="text-gray-500 flex items-center md:justify-center gap-x-1">
                     <HiOutlineLocationMarker size={20} className="text-white" />
                     {user?.Profile?.location || "Your location"}
@@ -152,6 +153,7 @@ export default function Profile() {
                 Likes
               </a>
             </div>
+            <TweetCard user={user} isProfile />
           </div>
         </div>
       </div>

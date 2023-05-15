@@ -15,23 +15,33 @@ interface Tweet {
   };
 }
 
-const TweetCard = () => {
+const TweetCard = ({ isProfile, user }: any) => {
   const [tweets, setTweets] = useState<Tweet[]>([]);
-
   const handleGetTweets = useCallback(async () => {
-    const res = await fetch("http://localhost:8080/api/getTweets", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    setTweets(data.tweets);
-  }, [setTweets]);
+    if (isProfile) {
+      const res = await fetch(
+        `http://localhost:8080/api/getUserTweets?username=${user?.username}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await res.json();
+      setTweets(data.tweets);
+    } else {
+      const res = await fetch("http://localhost:8080/api/getTweets", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      setTweets(data.tweets);
+    }
+  }, [setTweets, isProfile, user?.username]);
 
   useEffect(() => {
     handleGetTweets();
-  }, [handleGetTweets]);
+  }, [handleGetTweets, isProfile, user?.username]);
 
   return (
     <div className="w-full">

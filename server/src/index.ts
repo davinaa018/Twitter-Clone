@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { loginUser, registerUser } from "./controllers/auth";
-import { createTweet, getTweets } from "./controllers/tweets";
+import { createTweet, getTweets, getUserTweets } from "./controllers/tweets";
 import { createProfile } from "./controllers/profile";
 import { getCurrentUser, getUserByUsername } from "./controllers/user";
 
@@ -23,6 +23,7 @@ app.get("/api/getUserByUsername", getUserByUsername);
 // Tweets
 app.post("/api/createTweet", createTweet);
 app.get("/api/getTweets", getTweets);
+app.get("/api/getUserTweets", getUserTweets);
 
 // Profile
 app.post("/api/createProfile", createProfile);

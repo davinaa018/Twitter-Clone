@@ -63,3 +63,34 @@ export const getTweets = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+export const getUserTweets = async (req: Request, res: Response) => {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    const { username } = req.query;
+
+    if (!username)
+      return res.status(400).json({ error: "Please provide a username" });
+
+    const tweets = await prisma.tweet.findMany({
+      where: {
+        user: {
+          username: username as string,
+        },
+      },
+      include: {
+        user: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({ tweets });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};

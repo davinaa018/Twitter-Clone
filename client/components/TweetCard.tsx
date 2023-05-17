@@ -82,10 +82,22 @@ const TweetCard = ({ isProfile, user }: any) => {
                 </div>
                 <p className="text-sm md:text-base">{tweet.description}</p>
                 <div className="pt-2 flex items-center w-8/12 text-zinc-600 ">
-                  <FiMessageCircle className="w-5 h-5 flex-grow hover:text-twitterBlue cursor-pointer" />
-                  <AiOutlineRetweet className="w-5 h-5 flex-grow hover:text-green-500 cursor-pointer" />
-                  <AiOutlineHeart className="w-5 h-5 flex-grow hover:text-red-500 cursor-pointer" />
-                  <FiUpload className="w-5 h-5 flex-grow hover:text-twitterBlue cursor-pointer" />
+                  <FiMessageCircle
+                    className="w-5 h-5 flex-grow hover:text-twitterBlue cursor-pointer transform-gpu transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-110 active:scale-90 active:text-twitterBlue"
+                    title="Comment"
+                  />
+                  <AiOutlineRetweet
+                    className="w-5 h-5 flex-grow hover:text-green-500 cursor-pointer transform-gpu transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-110 active:scale-90 active:text-green-500"
+                    title="Retweet"
+                  />
+                  <AiOutlineHeart
+                    className="w-5 h-5 flex-grow hover:text-red-500 cursor-pointer transform-gpu transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-110 active:scale-90 active:text-red-500"
+                    title="Like"
+                  />
+                  <FiUpload
+                    className="w-5 h-5 flex-grow hover:text-twitterBlue cursor-pointer transform-gpu transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-110 active:scale-90 active:text-twitterBlue"
+                    title="Share"
+                  />
                 </div>
               </div>
             </div>

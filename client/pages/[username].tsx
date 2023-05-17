@@ -7,20 +7,25 @@ import {
   HiLink,
   HiOutlineDotsHorizontal,
 } from "react-icons/hi";
-import { GiFeather } from "react-icons/gi";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { useRouter } from "next/router";
 
 import CreateProfile from "@/components/CreateProfile";
 import { getUserByUsername } from "@/hooks/useGetUserByUsername";
 import TweetCard from "@/components/TweetCard";
+import { followUser } from "@/hooks/useFollow";
 
 export default function Profile() {
   const [showModal, setShowModal] = useState(false);
   const [user, setUser] = useState<any>();
-  const [userTweets, setUserTweets] = useState<any[]>();
   const [isCurrentUser, setIsCurrentUser] = useState();
+  const [isFollowing, setIsFollowing] = useState(false);
   const router = useRouter();
+
+  const handleFollow = useCallback(async () => {
+    const data = await followUser(user?.username);
+    setIsFollowing(data.isFollowing);
+  }, [user?.username, setIsFollowing]);
 
   const getData = useCallback(async () => {
     const { user, isCurrentUser } = await getUserByUsername(
@@ -30,8 +35,16 @@ export default function Profile() {
     setIsCurrentUser(isCurrentUser);
   }, [setUser, setIsCurrentUser, router.query.username]);
 
+  const checkIfFollowing = useCallback(async () => {
+    const { isFollowing } = await getUserByUsername(
+      router.query.username as string
+    );
+    setIsFollowing(isFollowing);
+  }, [user?.username, setIsFollowing]);
+
   useEffect(() => {
     getData();
+    checkIfFollowing();
   }, [getData]);
 
   return (
@@ -47,10 +60,6 @@ export default function Profile() {
           <IconBar />
           <div className="w-full px-10 hidden xl:block">
             <Button label="Tweet" isColor />
-          </div>
-          <div className="flex items-center justify-center relative xl:hidden rounded-full p-3 bg-twitterBlue hover:bg-twitterBlue/80">
-            <span className="absolute left-2 top-1">+</span>
-            <GiFeather size={25} />
           </div>
         </div>
       </div>
@@ -91,7 +100,12 @@ export default function Profile() {
                     onClick={() => setShowModal(true)}
                   />
                 ) : (
-                  <Button label="Follow" outlined small />
+                  <Button
+                    label={isFollowing ? "Unfollow" : "Follow"}
+                    outlined
+                    small
+                    onClick={handleFollow}
+                  />
                 )}
               </div>
               <div className="flex flex-col justify-center">
